@@ -7,41 +7,41 @@ extern "C" {
 
 // Basic simple test with 1x1 matrices
 TEST(GemmTest, SimpleGemm) {
-    int a[] = {1};
-    int b[] = {2};
-    int gemm_sol[] = {0};
+    double a[] = {1};
+    double b[] = {2};
+    double gemm_sol[] = {0};
     
-    int sol[] = {2};
+    double sol[] = {2};
     
     gemm(1, gemm_sol, a, b);
 
-    EXPECT_THAT(gemm_sol, testing::ContainerEq(sol));
+    EXPECT_THAT(gemm_sol, testing::Pointwise(testing::DoubleNear(1e-14), sol));
 }
 
 // Test major ordering with non-symmetric 2x2 matrices
 TEST(GemmTest, RowMajor) {
-    int a[] = {1, 2, 3, 4};
-    int b[] = {5, 6, 7, 8};
-    int gemm_sol[] = {0, 0, 0, 0};
+    double a[] = {1, 2, 3, 4};
+    double b[] = {5, 6, 7, 8};
+    double gemm_sol[] = {0, 0, 0, 0};
     
-    int sol[] = {19, 22, 43, 50};
+    double sol[] = {19, 22, 43, 50};
     
     gemm(2, gemm_sol, a, b);
 
-    EXPECT_THAT(gemm_sol, testing::ContainerEq(sol));
+    EXPECT_THAT(gemm_sol, testing::Pointwise(testing::DoubleNear(1e-14), sol));
 }
 
-// Test higher dimension matrices and negative numbers
+// Test higher dimension matrices, negative and fractional numbers
 TEST(GemmTest, HigherDimNeg) {
-    int a[] = {1, 2, 3, 4, 5, 6, 7, 8, -1, -2, -3, -4, -5, -6, -7, -8};
-    int b[] = {8, 6, 7, 5, -4, -2, -3, -1, -8, -6, -7, -5, 4, 2, 3, 1};
-    int gemm_sol[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    double a[] = {1, 2, 3, 4, 5.1, 6, 7, 8, -1, -2, -3, -4, -5.1, -6, -7, -8};
+    double b[] = {8, 6, 7, 5.1, -4, -2, -3, -1, -8, -6, -7, -5.1, 4, 2, 3, 1};
+    double gemm_sol[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     
-    int sol[] = {-8, -8, -8, -8, -8, -8, -8, -8, 8, 8, 8, 8, 8, 8, 8, 8};
+    double sol[] = {-8, -8, -8, -8.2, -7.2, -7.4, -7.3, -7.69, 8, 8, 8, 8.2, 7.2, 7.4, 7.3, 7.69};
     
     gemm(4, gemm_sol, a, b);
 
-    EXPECT_THAT(gemm_sol, testing::ContainerEq(sol));
+    EXPECT_THAT(gemm_sol, testing::Pointwise(testing::DoubleNear(1e-14), sol));
 }
 
 int main(int argc, char **argv) {

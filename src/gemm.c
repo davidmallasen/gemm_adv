@@ -1,6 +1,6 @@
 #include "gemm.h"
 
-void gemm(int n, int* c, int* a, int* b) {
+void gemm(int n, double* c, double* a, double* b) {
     for(int i = 0; i < n; ++i) {
         for(int j = 0; j < n; ++j) {
             c[i * n + j] = 0;
