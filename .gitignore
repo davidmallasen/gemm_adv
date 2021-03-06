@@ -120,6 +120,9 @@ dkms.conf
 
 *.log
 *.trs
-test_led
-test_color
-func_test
+
+# Vim temp files
+*.swp
+
+# Executable outputs
+bin/
