@@ -2,4 +2,4 @@
 SUBDIRS = src tests
 
 # 2. remember to include the header folder when packing for distribution
-EXTRA_DIST = include
+EXTRA_DIST = include scripts

@@ -9,7 +9,7 @@ cd gemm_adv
 
 Install googletest and googlemock for unit testing and build OpenBLAS to improve the naive implementation.
 
-To build OpenBLAS in Ubuntu download the tar.gz from [OpenBLAS](https://www.openblas.net/), extract it and run `make`. Then run `make PREFIX=/path/to/installation install`.
+To build OpenBLAS in Ubuntu download the tar.gz from [OpenBLAS](https://www.openblas.net/), extract it and run `make`. Then run `make PREFIX=/path/to/installation install` and also install `sudo apt-get install libopenblas-dev`.
 
 Set the following environment variables:
 ~~~
@@ -37,8 +37,20 @@ To get the full output run `./tests/bin/gemm_test` or `./tests/bin/openblas_gemm
 To measure the performance of the naive and OpenBLAS implementations you can run the `measure_performance.sh` script. For example:
 
 ~~~
-./measure_performance.sh bin/naive data/naive_perf.dat
-./measure_performance.sh bin/openblas data/openblas_perf.dat
+./scripts/measure_performance.sh bin/naive data/naive_perf.dat
+./scripts/measure_performance.sh bin/openblas data/openblas_perf.dat
 ~~~
 
 Performance data is given for a intel i7-9750H CPU running on one core. You can visualize the results in the images given or generate new plots using `gnuplot` with the `.gp` files.
+
+## Deploying with docker
+
+First create the distribution tarball by running `make dist`.
+
+Then build and run the docker container:
+~~~
+sudo docker build -t gemm_adv-1:latest .
+sudo docker run --rm -v `pwd`/data:/gemm_adv-1.0/data -it gemm_adv-1:latest
+~~~
+
+In the docker container you can run the same tests and performance comparisons as above.
