@@ -9,15 +9,20 @@ cd gemm_adv
 
 Install googletest and googlemock for unit testing and build OpenBLAS to improve the naive implementation.
 
-To build OpenBLAS in Ubuntu download the tar.gz from [OpenBLAS](https://www.openblas.net/), extract it and run `make`. Then run `make PREFIX=/path/to/installation install` and also install `sudo apt-get install libopenblas-dev`.
+To build OpenBLAS in Ubuntu download the tar.gz from [OpenBLAS](https://www.openblas.net/), extract it and run `make`. Then run `make PREFIX=/path/to/installation install`.
+
+To build LIBXSMM in Ubuntu download the tar.gz from [GitHub](https://github.com/hfp/libxsmm/releases/), extract it and run `make PREFIX=/path/to/installation STATIC=0 install`.
 
 Set the following environment variables:
 ~~~
 export OPENBLAS_NUM_THREADS=1
 export OPENBLAS_LIB=/path/to/openblas/lib
 export OPENBLAS_INCLUDE=/path/to/openblas/include
+export LIBXSMM_LIB=/path/to/libxsmm/lib
+export LIBXSMM_INCLUDE=/path/to/libxsmm/include
+export LD_LIBRARY_PATH=$OPENBLAS_LIB:$LIBXSMM_LIB:$LD_LIBRARY_PATH
 ~~~
-Where `OPENBLAS_LIB` contains `libopenblas.a` and `OPENBLAS_INCLUDE` contains `cblas.h`. We set the number of threads to 1 to have a better comparison with the naive implementation.
+Where `OPENBLAS_LIB` contains `libopenblas.so`, `LIBXSMM_LIB` contains `libxsmm.so`, `OPENBLAS_INCLUDE` contains `cblas.h` and `LIBXSMM_INCLUDE` contains `libxsmm.h`. We set the number of threads to 1 to have a better comparison with the naive implementation.
 
 To build the system, in the root of the repo run:
 
@@ -30,18 +35,21 @@ make
 ## Unit testing
 
 To execute the tests for the naive implementation and the OpenBLAS replacement run `make check`.
-To get the full output run `./tests/bin/gemm_test` or `./tests/bin/openblas_gemm_test`.
+To get the full output run `./tests/bin/gemm_test`, `./tests/bin/openblas_gemm_test` or `./tests/bin/libxsmm_gemm_test`.
 
-## Comparison with OpenBLAS
+## Performance comparisons
 
-To measure the performance of the naive and OpenBLAS implementations you can run the `measure_performance.sh` script. For example:
+To measure the performance of the naive, OpenBLAS and LIBXSMM implementations you can run the `measure_performance.sh` script. For example:
 
 ~~~
 ./scripts/measure_performance.sh bin/naive data/naive_perf.dat
 ./scripts/measure_performance.sh bin/openblas data/openblas_perf.dat
+./scripts/measure_performance.sh bin/libxsmm data/libxsmm_perf.dat
 ~~~
 
-Performance data is given for a intel i7-9750H CPU running on one core. You can visualize the results in the images given or generate new plots using `gnuplot` with the `.gp` files.
+Performance data is given for an intel i7-9750H CPU running on one core. You can visualize the results in the images given or generate new plots using `gnuplot` with the `.gp` files.
+
+*Note:* When using LIBXSMM, the matrices have to be transposed since the library expects column-major order. This could affect the comparison with the other implementations.
 
 ## Deploying with docker
 
