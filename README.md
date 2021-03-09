@@ -7,11 +7,13 @@ git clone https://github.com/davidmallasen/gemm_adv.git
 cd gemm_adv
 ~~~
 
-Install googletest and googlemock for unit testing and build OpenBLAS to improve the naive implementation.
+Install googletest and googlemock for unit testing and build OpenBLAS and LIBXSMM to improve the naive implementation.
 
 To build OpenBLAS in Ubuntu download the tar.gz from [OpenBLAS](https://www.openblas.net/), extract it and run `make`. Then run `make PREFIX=/path/to/installation install`.
 
 To build LIBXSMM in Ubuntu download the tar.gz from [GitHub](https://github.com/hfp/libxsmm/releases/), extract it and run `make PREFIX=/path/to/installation STATIC=0 install`.
+
+Detailed steps can be seen in the `Dockerfile`.
 
 Set the following environment variables:
 ~~~
@@ -53,7 +55,7 @@ Performance data is given for an intel i7-9750H CPU running on one core. You can
 
 ## Deploying with docker
 
-First create the distribution tarball by running `make dist`.
+First create the distribution tarball by running `make dist`. Or download it from [releases](https://github.com/davidmallasen/gemm_adv/releases/).
 
 Then build and run the docker container:
 ~~~
